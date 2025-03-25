@@ -1,27 +1,40 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTask } from "../redux/taskSlice";
+import "../styles/global.css"; // Style global
 
 const AddTask = () => {
   const [description, setDescription] = useState("");
   const dispatch = useDispatch();
 
-  const handleAddTask = () => {
-    if (!description.trim()) return;
-    dispatch(addTask({ id: Date.now(), description, isDone: false }));
-    setDescription("");
+  const handleAddTask = (e) => {
+    e.preventDefault();
+    if (description.trim()) {
+      const newTask = {
+        id: Date.now(),
+        description,
+        isDone: false,
+      };
+      dispatch(addTask(newTask));
+      setDescription(""); // Réinitialiser l'input après l'ajout
+    } else {
+      alert("Veuillez remplir la description de la tâche.");
+    }
   };
 
   return (
-    <div className="add-task">
+    <form onSubmit={handleAddTask} className="add-task-form">
       <input
         type="text"
-        placeholder="Nouvelle tâche..."
+        placeholder="Ajouter une nouvelle tâche"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
+        className="add-task-input"
       />
-      <button onClick={handleAddTask}>Ajouter</button>
-    </div>
+      <button type="submit" className="add-task-button">
+        Ajouter
+      </button>
+    </form>
   );
 };
 
